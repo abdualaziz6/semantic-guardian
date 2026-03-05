@@ -1,2 +1,3 @@
-# semantic-guardian
-Semantic Guardian POC
+cd ui
+pip install -r requirements.txt
+streamlit run app.py
