@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from validator_rules import rule_check
+from orchestrator import orchestrate_validation
+import traceback
 
 app = FastAPI()
 
@@ -9,10 +10,14 @@ def home():
 
 @app.post("/validate")
 def validate(data: dict):
-
-    rule_result = rule_check(data)
-
-    if rule_result:
-        return {"warning": rule_result}
-
-    return {"status": "ok"}
+    try:
+        result = orchestrate_validation(data)
+        return result
+    except Exception as e:
+        return {
+            "status": "error",
+            "confidence_score": 0.0,
+            "message": str(e),
+            "suggestion": traceback.format_exc(),
+            "source": "backend"
+        }
